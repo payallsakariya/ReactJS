@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "name": "ABC",
+        "total":85
+    },
+    {
+        "id":2,
+        "name":"MDBC",
+        "total":80
+    },
+    {
+        "id":3,
+        "name":"MCBC",
+        "total":78
+    }
+]
