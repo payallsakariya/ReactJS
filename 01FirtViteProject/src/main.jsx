@@ -13,9 +13,9 @@ const str2 = React.createElement(
 createRoot(document.getElementById('root')).render(
   <>
 
-  <StrictMode>
+
     <App />
-  </StrictMode>
+
   </>
 )
 
