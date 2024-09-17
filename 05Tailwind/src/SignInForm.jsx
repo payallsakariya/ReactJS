@@ -79,9 +79,12 @@ function GetLOginData({user=password,pass=password}) {
           )}
         </div>
       </div>)} 
-      {cflag && (<div>
-        <h2>Hello {username}</h2>
-        <h3>Your pass is {password}</h3>
+      {cflag && (
+        <div className="card border border-gray-300 rounded-lg shadow-lg p-6 bg-white">
+        <div className="w-full max-w-[100000px] lg:mt-4 m-1">
+        <h3 className='p-5 m-5'>Hello ,  <b>{username}</b></h3>
+        <h3 className='p-5 m-5'>Your pass is <b>{password}</b></h3>
+      </div>
       </div>)}
     </div>
   );
