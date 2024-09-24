@@ -4,13 +4,15 @@ import SignInForm from './SignInForm';
 import { CardTwo } from "./CardTwo";
 import FetchingData from './FetchingData';
 import WindowResizeComponent from './WindowResizeComponent';
+import FetchAPI from "./FetchAPI";
 
 function App() {
   let login ='false';
   return (
    <>
-   {/* <FetchingData /> */}
-<WindowResizeComponent />
+   {/* <FetchAPI url="https://hitvaniapp.excellcons.com/datalist"/> */}
+   <FetchingData url="https://hitvaniapp.excellcons.com/api/menucontent" />
+{/* <WindowResizeComponent /> */}
       
    </>
   );
