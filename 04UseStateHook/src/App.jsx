@@ -3,15 +3,19 @@ import "./App.css";
 import ChangeColor from "./ChangeColor";
 import NewApp from "./NewApp";
 import UseEffectHook from "./UseEffectHook";
+import UseReducerEx from "./UseReducerEx";
+import UseRefExample from "./UseRefExample";
 
 
 const App = () => {
    
     return (
         <>
-    {/*     <ChangeColor />
-       <NewApp /> */}
-<UseEffectHook />
+       {/* <ChangeColor />
+       <NewApp />
+       <UseEffectHook /> */}
+       <UseReducerEx />
+       <UseRefExample />
        </>
        
     );
