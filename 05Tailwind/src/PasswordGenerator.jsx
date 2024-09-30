@@ -6,7 +6,8 @@ function PasswordGenerator() {
   const [charAllowed, setCharAllowed] = useState(false);
   const [password, setPassword] = useState("");
   const [disabledv, setDisabled] = useState(false); // State to track disabled status
-  const [showReset, setShowReset] = useState(false); // State to control Reset button visibility
+  const [showReset, setShowReset] = useState(false); // State to manage Reset button visibility
+  const [hasCopied, setHasCopied] = useState(false); // State to track if changes were made
 
   const passwordRef = useRef(null);
 
@@ -26,9 +27,9 @@ function PasswordGenerator() {
 
   // Function to copy password to clipboard
   const copyPasswordToClipboard = useCallback(() => {
-    // Disable checkboxes and range on copy
-    setDisabled(true);
-    setShowReset(true); // Show reset button when copy is clicked
+    setDisabled(true); // Disable checkboxes and range
+    setShowReset(true); // Show Reset button when copy is clicked
+    setHasCopied(true); // Set changes made to true
 
     if (passwordRef.current) {
       passwordRef.current.select();
@@ -37,11 +38,28 @@ function PasswordGenerator() {
     }
   }, [password]);
 
-  // Function to reset the disabled elements
+  // Function to reset the disabled elements and hide Reset button
   const resetSettings = () => {
     setDisabled(false); // Enable checkboxes and range
-    setShowReset(false); // Hide reset button
+    setShowReset(false); // Hide Reset button
+    setHasCopied(false); // Reset changes made
   };
+
+  // Handle the browser's unload or reload event
+  useEffect(() => {
+    if (hasCopied) {
+      window.onbeforeunload = (event) => {
+        event.preventDefault(); // Prevent default unload action
+        event.returnValue = ""; // Chrome requires returnValue to be set
+      };
+    } else {
+      window.onbeforeunload = null; // Remove the event listener if no changes
+    }
+
+    return () => {
+      window.onbeforeunload = null; // Clean up on component unmount
+    };
+  }, [hasCopied]);
 
   useEffect(() => {
     passwordGenerator();
@@ -70,13 +88,16 @@ function PasswordGenerator() {
         >
           Copy
         </button>
-        <button
-          onClick={resetSettings}
-          className="outline-none bg-red-500 text-white px-3 py-0.5 shrink-0 ml-2"
-          style={{ display: showReset ? "block" : "none" }} // Conditional rendering based on showReset state
-        >
-          Reset
-        </button>
+        
+        {/* Reset Button with Conditional Display */}
+        {showReset && (
+          <button
+            onClick={resetSettings}
+            className="outline-none bg-red-500 text-white px-3 py-0.5 shrink-0 ml-2"
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       {/* Options and Length Slider */}
