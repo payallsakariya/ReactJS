@@ -48,12 +48,12 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
-          <Link to="/datacontent" className="text-blue-600 hover:text-blue-800">
+          <Link to="/DataContent" className="text-blue-600 hover:text-blue-800">
             DataContent
           </Link>
         </li>
         <li>
-          <Link to="/mediacontent" className="text-blue-600 hover:text-blue-800">
+          <Link to="/MediaContent" className="text-blue-600 hover:text-blue-800">
             MediaContent
           </Link>
         </li>
