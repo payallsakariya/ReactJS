@@ -5,6 +5,7 @@ import NewApp from "./NewApp";
 import UseEffectHook from "./UseEffectHook";
 import UseReducerEx from "./UseReducerEx";
 import UseRefExample from "./UseRefExample";
+import CustomHook from "./Components/CustomHook";
 
 
 const App = () => {
@@ -14,8 +15,9 @@ const App = () => {
        {/* <ChangeColor />
        <NewApp />
        <UseEffectHook /> */}
-       <UseReducerEx />
-       <UseRefExample />
+       {/* <UseReducerEx />
+       <UseRefExample /> */}
+       <CustomHook />
        </>
        
     );

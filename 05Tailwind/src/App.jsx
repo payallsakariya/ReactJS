@@ -11,7 +11,7 @@ function App() {
   let login ='false';
   return (
    <>
-   {/* <FetchAPI url="https://hitvaniapp.excellcons.com/datalist"/> */}
+   <FetchAPI url="https://hitvaniapp.excellcons.com/datalist"/>
    {/* <FetchingData url="https://hitvaniapp.excellcons.com/api/menucontent" /> */}
    {/* <WindowResizeComponent /> */}
       <PasswordGenerator />

@@ -57,6 +57,11 @@ const Sidebar = () => {
             MediaContent
           </Link>
         </li>
+        <li>
+          <Link to="/forms" className="text-blue-600 hover:text-blue-800">
+            Demo
+          </Link>
+        </li>
       </ul>
     </nav>
   );
