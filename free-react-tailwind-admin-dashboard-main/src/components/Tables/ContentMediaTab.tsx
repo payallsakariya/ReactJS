@@ -20,7 +20,7 @@ const ContentMediaTab: React.FC = () => {
 
       <div className="flex flex-col overflow-x-auto">
         {/* Table Header */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 rounded-sm bg-gray-200 dark:bg-meta-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-9 rounded-sm bg-gray-200 dark:bg-meta-4">
           <div className="p-2.5 text-center xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">Action</h5>
           </div>
@@ -53,7 +53,7 @@ const ContentMediaTab: React.FC = () => {
         {/* Data Rows */}
         {ContentMediadata.map((item, index) => (
           <div
-            className={`grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 ${
+            className={`grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-9 ${
               index === ContentMediadata.length - 1 ? '' : 'border-b border-stroke dark:border-strokedark'
             }`}
             key={item.cm_id}
@@ -98,11 +98,23 @@ const ContentMediaTab: React.FC = () => {
             <form>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block mb-2">Media Link</label>
+                  <label className="block mb-2">MenuId</label>
                   <input type="text" className="w-full border px-3 py-2 rounded-md" placeholder="Enter Media Link" />
                 </div>
                 <div>
-                  <label className="block mb-2">Media Description</label>
+                  <label className="block mb-2">Menu Name</label>
+                  <input type="text" className="w-full border px-3 py-2 rounded-md" placeholder="Enter Description" />
+                </div>
+                <div>
+                  <label className="block mb-2">Media Link</label>
+                  <textarea className="w-full border px-3 py-2 rounded-md" rows={3}></textarea>
+                </div>
+                <div>
+                  <label className="block mb-2">Photo Link</label>
+                  <textarea className="w-full border px-3 py-2 rounded-md" rows={3}></textarea>
+                </div>
+                <div>
+                  <label className="block mb-2">Media Desc</label>
                   <input type="text" className="w-full border px-3 py-2 rounded-md" placeholder="Enter Description" />
                 </div>
                 <div>
@@ -113,6 +125,26 @@ const ContentMediaTab: React.FC = () => {
                   <label className="block mb-2">Album</label>
                   <input type="text" className="w-full border px-3 py-2 rounded-md" placeholder="Enter Album Name" />
                 </div>
+                
+                <div>
+                  <label className="block mb-2">Type</label>
+                  <select id="type" name="type" className="w-full border px-3 py-2 rounded-md">
+                    <option selected="" value="" disabled="">Select Type</option>
+                    <option value="a">Audio</option>
+                    <option value="v">Video</option>
+                    <option value="p">PDF</option>
+                    <option value="t">Text</option>
+                  </select>
+                </div>
+                
+                {/* Updated Status Field */}
+                <div>
+                  <label className="block mb-2">Status</label>
+                  <div className="flex items-center">
+                    <input type="checkbox" id="status" name="status" className="w-4 h-4 border-gray-300 rounded" />
+                    <label htmlFor="status" className="ml-2 text-gray-700">Active</label>
+                  </div>
+                </div>
               </div>
               <div className="flex justify-end mt-4">
                 <button type="button" className="bg-red-500 text-white px-4 py-2 rounded-md mr-2" onClick={() => setShowModal(false)}>Cancel</button>
@@ -122,6 +154,7 @@ const ContentMediaTab: React.FC = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };

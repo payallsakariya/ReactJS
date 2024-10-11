@@ -21,6 +21,7 @@ import TableOne from './components/Tables/TableOne';
 import CalenderMasterTab from './components/Tables/CalenderMasterTab';
 import AppVersionTab from './components/Tables/AppVersionTab';
 import ContentMediaTab from './components/Tables/ContentMediaTab';
+import MenuContentManager from './components/Tables/MenuContentManager';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -67,6 +68,16 @@ function App() {
             </>
           }
         />
+        <Route
+            path="/DataContent"
+            element={
+              <>
+                {/* <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" /> */}
+                <MenuContentManager />
+              </>
+            }
+          />
+
         <Route
           path="/forms/form-elements"
           element={
