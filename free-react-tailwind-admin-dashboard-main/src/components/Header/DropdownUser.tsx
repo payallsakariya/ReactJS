@@ -8,7 +8,7 @@ const DropdownUser = () => {
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
-      <Link
+      {/* <Link
         onClick={() => setDropdownOpen(!dropdownOpen)}
         className="flex items-center gap-4"
         to="#"
@@ -39,7 +39,7 @@ const DropdownUser = () => {
             fill=""
           />
         </svg>
-      </Link>
+      </Link> */}
 
       {/* <!-- Dropdown Start --> */}
       {dropdownOpen && (
