@@ -1,3 +1,4 @@
+import { Editor } from '@tinymce/tinymce-react';
 import React, { useState } from 'react';
 import Select from 'react-select';
 
@@ -15,9 +16,22 @@ interface MenuContent {
   }
   
 
-const MenuContentManager: React.FC = () => {
+const MenuContentManager = () => {
+
+  const [content, setContent] = useState("");
+  const editorRef = useRef(null);
+
+  // Function to handle button click and fetch editor content
+  const getContent = () => {
+      if (editorRef.current) {
+          setContent(editorRef.current.getContent()); // Get editor content when button is clicked
+          console.log(
+              "Editor content on button click:",
+              editorRef.current.getContent()
+          ); // Log content
+      }
+  };
   
-  const [mediaType, setMediaType] = useState("");
   const [menuContentData, setmenuContentData] = useState<MenuContent[]>([
     {
       menu_id: 1,
@@ -36,43 +50,48 @@ const MenuContentManager: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentMenu, setCurrentMenu] = useState<MenuContent | null>(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    data_content: '',
-  });
-  // Function to handle form submission
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const [formData, setFormData] = useState({ name: '', data_content: '' });
+   // Function to handle add or edit form submission
+   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (isEditing && currentMenu) {
-      // Handle Edit Operation
+      // Handle Edit
       const updatedData = menuContentData.map(item =>
         item.menu_id === currentMenu.menu_id
-          ? { ...item, name: formData.name, data_content: formData.data_content }
+          ? { ...item, language: 'H',
+                       parent_menu_id: 2,
+                       child_menu_id: 12,
+                       parent_name: 'acb',
+                       name: formData.name,
+                       status: 'A',
+                       category: 'dsad',
+                       content_creator: 'dsad',
+                       data_content: formData.data_content }
           : item
       );
-      setMenuContentData(updatedData);
+      setmenuContentData(updatedData);
     } else {
-      // Handle Add Operation
+      // Handle Add
       const newMenu: MenuContent = {
-        menu_id: menuContentData.length + 1, // For demonstration; use UUID or backend-generated ID in production
-        language: 'E',
-        parent_menu_id: 0,
-        child_menu_id: 0,
-        parent_name: 'Root',
+        menu_id: menuContentData.length + 1, // Auto-increment ID for demo purpose
+        language: 'H',
+        parent_menu_id: 2,
+        child_menu_id: 12,
+        parent_name: 'abc',
         name: formData.name,
         status: 'A',
-        category: 'Main',
-        content_creator: 'Admin',
+        category: 'NULL',
+        content_creator: 'abc',
         data_content: formData.data_content,
       };
-      setMenuContentData([...menuContentData, newMenu]);
+      setmenuContentData([...menuContentData, newMenu]);
     }
     setShowModal(false); // Close modal
   };
 
-   // Function to handle the edit operation
-   const handleEdit = (menu_id: number) => {
+  // Function to handle edit operation
+  const handleEdit = (menu_id: number) => {
     const menuToEdit = menuContentData.find(item => item.menu_id === menu_id);
     if (menuToEdit) {
       setIsEditing(true);
@@ -81,6 +100,7 @@ const MenuContentManager: React.FC = () => {
       setShowModal(true);
     }
   };
+
   // Function to handle delete operation
   const confirmDelete = (menu_id: number) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
@@ -88,6 +108,7 @@ const MenuContentManager: React.FC = () => {
       setmenuContentData(updatedData);
     }
   };
+
 
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -102,7 +123,7 @@ const MenuContentManager: React.FC = () => {
                   <Select
 
                       placeholder="All"
-                      className="react-select-container w-[160px] z-50"
+                      className="react-select-container w-[135px] z-50"
                       classNamePrefix="react-select"
                     
                   />
@@ -113,7 +134,7 @@ const MenuContentManager: React.FC = () => {
               <div>
                   <Select
                       placeholder="All"
-                      className="react-select-container w-[160px] z-40"
+                      className="react-select-container w-[135px] z-40"
                       classNamePrefix="react-select" 
                   />
                   
@@ -124,7 +145,7 @@ const MenuContentManager: React.FC = () => {
               <div>
                   <Select
                       placeholder="All"
-                      className="react-select-container w-[160px] z-40"
+                      className="react-select-container w-[135px] z-40"
                       classNamePrefix="react-select" 
                   />
                   
@@ -135,7 +156,7 @@ const MenuContentManager: React.FC = () => {
               <div>
                   <Select
                       placeholder="All"
-                      className="react-select-container w-[160px] z-40"
+                      className="react-select-container w-[135px] z-40"
                       classNamePrefix="react-select" 
                   />
                   
@@ -146,7 +167,7 @@ const MenuContentManager: React.FC = () => {
               <div>
                   <Select
                       placeholder="All"
-                      className="react-select-container w-[160px] z-40"
+                      className="react-select-container w-[135px] z-40"
                       classNamePrefix="react-select" 
                   />
                   
@@ -166,7 +187,7 @@ const MenuContentManager: React.FC = () => {
                 setIsEditing(false);
                 setFormData({ name: '', data_content: '' });
                 setShowModal(true);
-              }}
+                }}
               className="w-32 h-9.5 mt-7 font-semibold flex items-center justify-center space-x-2 gap-3  bg-primary text-white px-4 py-2 rounded"
                   
           >
@@ -218,7 +239,7 @@ const MenuContentManager: React.FC = () => {
     key={item.menu_id}
   >
     <div className="flex items-center justify-center p-2.5 xl:p-5">
-      <button onClick={() => handleEdit(item.menu_id)} 
+      <button  onClick={() => handleEdit(item.menu_id)} 
               className="rounded bg-primary px-2 py-1 text-white">Edit</button>
       <button onClick={() => confirmDelete(item.menu_id)}
               className="rounded bg-red-500 px-2 py-1 text-white ml-2">Delete</button>
@@ -262,7 +283,7 @@ const MenuContentManager: React.FC = () => {
            <h3 className="text-xl mb-4">
            <b>{isEditing ? 'Edit' : 'Add New'} Menu Content Record</b>
            </h3>
-           <form>
+           <form onSubmit={handleFormSubmit} >
              <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                <div>
                  <label className="block mb-2"><b>Menu Name</b></label>
@@ -275,10 +296,38 @@ const MenuContentManager: React.FC = () => {
                <div>
                  <label className="block mb-2"><b>Data Content</b></label>
                  <textarea className="w-full border px-3 py-2 rounded-md" 
-                           rows={10}
+                           rows={1}
                            value={formData.data_content}
                            onChange={e => setFormData({ ...formData, data_content: e.target.value })}       
                            ></textarea>
+                    <Editor 
+                    onInit={(evt, editor) => (editorRef.current = editor)}
+                    apiKey={import.meta.env.VITE_API_KEY_TINYMCE}
+                    init={{
+                        plugins: [
+                            "advlist",
+                            "autolink",
+                            "lists",
+                            "link",
+                            "image",
+                            "charmap",
+                            "preview",
+                            "anchor",
+                            "searchreplace",
+                            "visualblocks",
+                            "code",
+                            "fullscreen",
+                            "insertdatetime",
+                            "media",
+                            "table",
+                            "help",
+                            "wordcount",
+                        ],
+                        toolbar:
+                            "undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help",
+                        tinycomments_mode: "embedded",
+                    }}
+                    />       
                </div>
                
              </div>
