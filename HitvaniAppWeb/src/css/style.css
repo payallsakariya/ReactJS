@@ -213,3 +213,8 @@ span.flatpickr-weekday,
 [x-cloak] {
   display: none !important;
 }
+
+.tox .tox-dialog--width-lg {
+  height: 580px !important;
+  max-width: 550px !important;
+}
