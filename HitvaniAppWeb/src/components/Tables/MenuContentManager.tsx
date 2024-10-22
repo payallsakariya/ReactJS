@@ -73,7 +73,6 @@ const MenuContentManager = () => {
     setSelectedL1(null); // Reset L1 selection when language changes
     resetSelections();
     if (selectedOption) {
-      setshowAdd(true); // Hide Add button
       setIsL1Disabled(false); // Enable L1 dropdown when a language is selected
       fetchL1Options(selectedOption.value); // Fetch L1 options from API
       console.log(selectedOption.value);
@@ -246,10 +245,9 @@ const handleSearch = () => {
   // Set the search ID based on the priority of selections
   if (searchIdValue) {
      setSearchID(searchIdValue);
+     console.log(searchIdVal)
   }
-
-  console.log('Final search ID:', searchIdValue);
-
+  setshowAdd(true);
   setisSearchMode(false);
 
   // Construct the search parameters
@@ -265,8 +263,15 @@ const handleSearch = () => {
 
   // Claer  hendle
   const handleclaer = () => {
+   
+    console.log('handleclaer',);
     setSelectedLanguage(null);
+    setshowAdd(false)
+
+    setisSearchMode(true);
     resetSelections();
+    resetSelections(); 
+    fetchMenuContent();
   };
 
   // Fetch menu content data with search parameters
@@ -293,10 +298,10 @@ const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
 };
 
 
- // Trigger fetchMenuContent with blank defaults when the component mounts
-useEffect(() => {
-  fetchMenuContent({ lang: '', menuid: '' }); // Pass blank values as default
-}, []); // Empty dependency array ensures it runs only once
+    // Trigger fetchMenuContent with blank defaults when the component mounts
+    useEffect(() => {
+      fetchMenuContent({ lang: '', menuid: '' }); // Pass blank values as default
+    }, []); // Empty dependency array ensures it runs only once
 
   // Handle edit operation
   const handleEdit = (child_id) => {
@@ -322,10 +327,10 @@ useEffect(() => {
     e.preventDefault();
 
     const payload = {
-      language: searchLVal.value ?? '',
+      language: searchLVal?.value ,
       name: formData.name,
       data_content: contentData,
-      ParentID: searchIdVal.value ?? '',
+      ParentID: searchIdVal,
       category: '',
       seq: '',
       stauts: '',
@@ -347,7 +352,7 @@ useEffect(() => {
             }),
           },
         );
-console.log('response',response);
+     
         if (response.ok) {
           // const updatedData = menuContentData.map((item) =>
           //   item.child_id === currentMenu.child_id
@@ -365,6 +370,7 @@ console.log('response',response);
     } else {
       // Add new record (POST)
       try {
+        // console.log(payload);
         const response = await fetch(`${API_BASE_URL}/addMenuContent`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -372,8 +378,9 @@ console.log('response',response);
         });
 
         if (response.ok) {
-          const newMenu = await response.json();
-          setmenuContentData([...menuContentData, newMenu]);
+          handleSearch();
+          // const newMenu = await response.json();
+          // setmenuContentData([...menuContentData, newMenu]);
         } else {
           console.error('Failed to add new menu content.');
         }
