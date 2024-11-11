@@ -24,7 +24,7 @@ const MenuContentManager = () => {
   //search button and search paramiters
   const [searchLVal, setsearchLVal] = useState([]);
   const [searchIdVal, setSearchID] = useState([]);
-  // const [rememberID, setrememberID] = useState(null);
+  const [MenuName, setMenuName] = useState(null);
   const [searchParams, setsearchparams] = useState('');
 
   // dropdown set option start
@@ -44,6 +44,23 @@ const MenuContentManager = () => {
   const [l4Options, setL4Options] = useState([]);
   const [isL4Disabled, setIsL4Disabled] = useState(true);
   const [selectedL4, setSelectedL4] = useState(null);
+
+  const [apiMessage, setApiMessage] = useState(''); // State for API messages
+  const [showMessage, setShowMessage] = useState(false); // Control visibility for fade-out
+  const [displayDiv, setDisplayDiv] = useState(false);
+
+  // Display and fade out message
+  const displayMessage = (message) => {
+    setApiMessage(message);
+    setShowMessage(true);
+    setDisplayDiv(true);
+
+    // Hide message text after 5 seconds
+    setTimeout(() => setShowMessage(false), 35000);
+
+    // Completely remove div after fade-out completes
+    setTimeout(() => setDisplayDiv(false), 4000);
+  };
 
   const [isSearchMode, setisSearchMode] = useState(true);
 
@@ -70,14 +87,16 @@ const MenuContentManager = () => {
     setSelectedLanguage(selectedOption);
     setsearchLVal(selectedOption);
     setisSearchMode(true);
+    setshowAdd(false);
     setSelectedL1(null); // Reset L1 selection when language changes
     resetSelections();
+    setMenuName(null);
     if (selectedOption) {
       setIsL1Disabled(false); // Enable L1 dropdown when a language is selected
       fetchL1Options(selectedOption.value); // Fetch L1 options from API
       console.log(selectedOption.value);
     } else {
-      setshowAdd(false);  
+      setshowAdd(false);
       setIsL1Disabled(true); // Disable L1 dropdown if no language is selected
       setL1Options([]); // Clear L1 options
     }
@@ -114,6 +133,8 @@ const MenuContentManager = () => {
     setSelectedL4(null);
     setIsL3Disabled(true);
     setIsL4Disabled(true);
+    setMenuName(null);
+    setshowAdd(false);
 
     if (selectedOption) {
       setIsL2Disabled(false); // Enable L2 dropdown when a language is selected
@@ -146,20 +167,21 @@ const MenuContentManager = () => {
 
   const handleL2Change = (selectedOption) => {
     setSelectedL2(selectedOption);
+    setshowAdd(false);
     // console.log('rememberID', rememberID);
     // setrememberID(rememberID);
     setisSearchMode(true);
-      setSelectedL3(null); // Reset L2 selection when language changes
-      setSelectedL4(null);
-      setIsL4Disabled(true);
+    setSelectedL3(null); // Reset L2 selection when language changes
+    setSelectedL4(null);
+    setIsL4Disabled(true);
+    setMenuName(null);
     if (selectedOption) {
-      
       // setSearchID(selectedOption.value);
       setIsL3Disabled(false); // Enable L2 dropdown when a language is selected
       // console.log(selectedOption.value);
       fetchL3Options(selectedOption.value); // Fetch L2 options from API
     } else {
-         // Set the search ID to the L1 value if L3 is cleared
+      // Set the search ID to the L1 value if L3 is cleared
       setIsL3Disabled(true); // Disable L2 dropdown if no language is selected
       setL3Options([]); // Clear L2 options
     }
@@ -186,9 +208,10 @@ const MenuContentManager = () => {
   const handleL3Change = (selectedOption) => {
     setSelectedL3(selectedOption);
     setisSearchMode(true);
+    setshowAdd(false);
     // setrememberID(null);
     setSelectedL4(null); // Reset L4 selection when L3 changes
-
+    setMenuName(null);
     if (selectedOption) {
       setIsL4Disabled(false); // Enable L4 dropdown when L3 is selected
       // setSearchID(selectedOption); // Set the search value
@@ -204,7 +227,9 @@ const MenuContentManager = () => {
 
   const handleL4Change = (selectedOption) => {
     // setSearchID(selectedOption);
+    setshowAdd(false);
     setisSearchMode(true);
+    setMenuName(null);
   };
 
   const fetchL4Options = async (l1Options) => {
@@ -227,81 +252,104 @@ const MenuContentManager = () => {
 
   // dropdown set option End
 
- // Search Handle
-const handleSearch = () => {
-  let searchIdValue = null;
+  //get Menu name for add and edit media
+  const fetchMenuname = async (menu_ID) => {
+    if (!menu_ID) {
+      console.warn('menu_ID is required to fetch menu name.');
+      return;
+    }
+    try {
+      const response = await fetch(`${API_BASE_URL}/selAddMedia/${menu_ID}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-  // Determine which selection should set the search ID
-  if (selectedL4) {
-    searchIdValue = selectedL4.value;
-  } else if (selectedL3) {
-    searchIdValue = selectedL3.value;
-  } else if (selectedL2) {
-    searchIdValue = selectedL2.value;
-  } else if (selectedL1) {
-    searchIdValue = selectedL1.value;
-  }
+      const data = await response.json();
 
-  // Set the search ID based on the priority of selections
-  if (searchIdValue) {
-     setSearchID(searchIdValue);
-     console.log(searchIdVal)
-  }
-  setshowAdd(true);
-  setisSearchMode(false);
-
-  // Construct the search parameters
-  const searchParams = {
-    lang: searchLVal?.value ?? '', // Use optional chaining to safely access value
-    menuid: searchIdValue ?? '',      // Use the final searchIdValue
+      if (data.success && data.result && data.result.length > 0) {
+        const menuName = data.result[0].name;
+        setMenuName(menuName);
+      } else {
+        console.warn('No menu item found in the response.');
+      }
+    } catch (error) {
+      console.error('Error fetching menu name:', error);
+    }
   };
 
-   // Call fetchMenuContent with the search parameters
-   fetchMenuContent(searchParams);
+  // Search Handle
+  const handleSearch = () => {
+    let searchIdValue = null;
 
-};
+    // Determine which selection should set the search ID
+    if (selectedL4) {
+      searchIdValue = selectedL4.value;
+    } else if (selectedL3) {
+      searchIdValue = selectedL3.value;
+    } else if (selectedL2) {
+      searchIdValue = selectedL2.value;
+    } else if (selectedL1) {
+      searchIdValue = selectedL1.value;
+    }
+
+    // Set the search ID based on the priority of selections
+    if (searchIdValue) {
+      setSearchID(searchIdValue);
+      console.log(searchIdVal);
+    }
+    setshowAdd(true);
+    setisSearchMode(false);
+
+    // Construct the search parameters
+    const searchParams = {
+      lang: searchLVal?.value ?? '', // Use optional chaining to safely access value
+      menuid: searchIdValue ?? '', // Use the final searchIdValue
+    };
+
+    // Call fetchMenuContent with the search parameters
+    fetchMenuContent(searchParams);
+  };
 
   // Claer  hendle
   const handleclaer = () => {
-   
-    console.log('handleclaer',);
     setSelectedLanguage(null);
-    setshowAdd(false)
+    setshowAdd(false);
 
     setisSearchMode(true);
     resetSelections();
-    resetSelections(); 
+    resetSelections();
     fetchMenuContent();
   };
 
   // Fetch menu content data with search parameters
-const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
-  try {
-    setLoading(true); // Show loader while fetching
+  const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
+    try {
+      setLoading(true); // Show loader while fetching
 
-    const { lang = '', menuid = '' } = searchParams;
+      const { lang = '', menuid = '' } = searchParams;
 
-    // Build the query string with the search parameters
-    const response = await fetch(`${API_BASE_URL}/menucontent?language=${lang}&menuid=${menuid}`);
-    if (!response.ok) {
-      setmenuContentData([]);
-      throw new Error('Network response was not ok');
+      // Build the query string with the search parameters
+      const response = await fetch(
+        `${API_BASE_URL}/menucontent?language=${lang}&menuid=${menuid}`,
+      );
+      if (!response.ok) {
+        setmenuContentData([]);
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setmenuContentData(data.result); // Set the fetched data
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+    } finally {
+      setLoading(false); // Set loading to false once data is fetched
     }
+  };
 
-    const data = await response.json();
-    setmenuContentData(data.result); // Set the fetched data
-  } catch (error) {
-    console.error('There was a problem with the fetch operation:', error);
-  } finally {
-    setLoading(false); // Set loading to false once data is fetched
-  }
-};
-
-
-    // Trigger fetchMenuContent with blank defaults when the component mounts
-    useEffect(() => {
-      fetchMenuContent({ lang: '', menuid: '' }); // Pass blank values as default
-    }, []); // Empty dependency array ensures it runs only once
+  // Trigger fetchMenuContent with blank defaults when the component mounts
+  useEffect(() => {
+    fetchMenuContent({ lang: '', menuid: '' }); // Pass blank values as default
+  }, []); // Empty dependency array ensures it runs only once
 
   // Handle edit operation
   const handleEdit = (child_id) => {
@@ -310,9 +358,9 @@ const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
       (item) => item.child_id === child_id,
     );
     if (menuToEdit) {
-       setIsEditing(true);
-       setCurrentMenu(menuToEdit);
-       setFormData({
+      setIsEditing(true);
+      setCurrentMenu(menuToEdit);
+      setFormData({
         name: menuToEdit.child_name,
         data_content: menuToEdit.data_content,
       });
@@ -327,7 +375,7 @@ const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
     e.preventDefault();
 
     const payload = {
-      language: searchLVal?.value ,
+      language: searchLVal?.value,
       name: formData.name,
       data_content: contentData,
       ParentID: searchIdVal,
@@ -352,16 +400,12 @@ const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
             }),
           },
         );
-     
+
         if (response.ok) {
-          // const updatedData = menuContentData.map((item) =>
-          //   item.child_id === currentMenu.child_id
-          //     ? { ...item, ...payload }
-          //     : item,
-          // );
-          // setmenuContentData(updatedData);
+          displayMessage('Record updated successfully.');
           handleSearch();
         } else {
+          displayMessage('Failed to update the nemu content.');
           console.error('Failed to update the menu content.');
         }
       } catch (error) {
@@ -378,13 +422,16 @@ const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
         });
 
         if (response.ok) {
+          displayMessage('New record added successfully.');
           handleSearch();
           // const newMenu = await response.json();
           // setmenuContentData([...menuContentData, newMenu]);
         } else {
+          displayMessage('Failed to add new nemu content.');
           console.error('Failed to add new menu content.');
         }
       } catch (error) {
+        displayMessage('Error in nemu content operation.');
         console.error('Error adding new menu content:', error);
       }
     }
@@ -407,15 +454,18 @@ const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
         );
 
         if (response.ok) {
+          displayMessage('Record deleted successfully.');
           // const updatedData = menuContentData.filter(
           //   (item) => item.child_id !== child_id,
           // );
           // setmenuContentData(updatedData);
           handleSearch();
         } else {
+          displayMessage('Failed to delete the menu content.');
           console.error('Failed to delete the menu content.');
         }
       } catch (error) {
+        displayMessage('Error deleting menu content.');
         console.error('Error deleting menu content:', error);
       }
     }
@@ -468,7 +518,15 @@ const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
       cell: (row) => (
         <div>
           <button
-            onClick={() => handleEdit(row.child_id)}
+            onClick={() => {
+              handleEdit(row.child_id);
+              setMenuName(null);
+              if (row.parentid == 0) {
+                fetchMenuname(row.child_id);
+              } else {
+                fetchMenuname(row.parentid);
+              }
+            }}
             className="rounded bg-primary px-2 py-1 text-white"
           >
             Edit
@@ -516,7 +574,7 @@ const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
     },
     {
       name: 'Status',
-      selector: (row) => row.status,
+      selector: (row) => row.stauts,
       sortable: true,
       width: '100px',
     },
@@ -524,7 +582,7 @@ const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
       name: 'Last M_Time',
       selector: (row) => row.last_modified_time,
       sortable: true,
-      width: '139px',
+      width: '149px',
     },
     {
       name: 'C Creater',
@@ -548,7 +606,7 @@ const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
             Menu Content Data Manager
           </h4>
         </div>
-        <div className="py-4 flex gap-5">
+        <div className="py-4 flex gap-5 flex-wrap">
           <div>
             {/* Language Select */}
             <div className="font-medium mb-1">Language</div>
@@ -641,10 +699,16 @@ const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
           {showAdd && (
             <button
               onClick={() => {
+                setMenuName(null);
                 setIsEditing(false);
                 setEditorValue('');
                 setFormData({ name: '', data_content: '' });
                 setShowModal(true);
+                if (searchIdVal) {
+                  fetchMenuname(searchIdVal);
+                } else {
+                  console.warn('menu_ID is missing or undefined.');
+                }
               }}
               className="w-32 h-9.5 mt-7 font-semibold flex items-center justify-center space-x-2 gap-3  bg-primary text-white px-4 py-2 rounded "
             >
@@ -654,6 +718,22 @@ const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
 
           {/* <button onClick={() => setShowModal(true)} className="w-32 h-9.5 mt-7 font-semibold flex items-center justify-center space-x-2 gap-3  bg-primary text-white px-4 py-2 rounded ">AddNewRecord</button> */}
         </div>
+
+        {/* API Message */}
+        {displayDiv && (
+          <div>
+            {apiMessage && (
+              <div
+                className={`mb-4 p-4 text-center text-white bg-green-500 rounded-md transition-opacity duration-1000 ${
+                  showMessage ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                {apiMessage}
+              </div>
+            )}
+          </div>
+        )}
+
         {loading ? (
           <Loader /> // Your defined loader component
         ) : (
@@ -686,68 +766,67 @@ const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
                         <input
                           type="text"
                           className="w-full border px-3 py-2 rounded-md"
-                          value={formData.name}
-                          onChange={(e) =>
-                            setFormData({ ...formData, name: e.target.value })
-                          }
-                          placeholder="Enter Description"
+                          value={MenuName}
+                          readOnly
                         />
                       </div>
-                      {isEditing &&  
-                        <div>
-                          <label className="block mb-2">
-                          <b>Menu Name</b>
-                        </label>
-                          <input
-                          type="text"
-                          className="w-full border px-3 py-2 rounded-md"
-                          value={formData.name}
-                          onChange={(e) =>
-                            setFormData({ ...formData, name: e.target.value })
-                          }
-                          placeholder="Enter Description"
-                        />
-                        </div>
-
-                      }
                       <div>
                         <label className="block mb-2">
-                          <b>Data Content</b>
+                          <b>Child Name</b>
                         </label>
-
-                        <Editor
-                          value={editorValue}
-                          onEditorChange={(newValue, editor) => {
-                            setEditorValue(newValue);
-                            setContentData(editor.getContent());
-                          }}
-                          apiKey={import.meta.env.VITE_API_KEY_TINYMCE}
-                          init={{
-                            plugins: [
-                              'advlist',
-                              'autolink',
-                              'lists',
-                              'link',
-                              'image',
-                              'charmap',
-                              'preview',
-                              'anchor',
-                              'searchreplace',
-                              'visualblocks',
-                              'code',
-                              'fullscreen',
-                              'insertdatetime',
-                              'media',
-                              'table',
-                              'help',
-                              'wordcount',
-                            ],
-                            toolbar:
-                              'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                            tinycomments_mode: 'embedded',
-                          }}
+                        <input
+                          type="text"
+                          className="w-full border px-3 py-2 rounded-md"
+                          value={formData.name || ''}
+                          onChange={(e) =>
+                            setFormData({ ...formData, name: e.target.value })
+                          }
+                          placeholder="Enter New Child Name"
                         />
                       </div>
+                      {loading ? (
+                        <Loader /> // Your defined loader component
+                      ) : (
+                        <div>
+                          <label className="block mb-2">
+                            <b>Data Content</b>
+                          </label>
+
+                          <Editor
+                            value={editorValue}
+                            onEditorChange={(newValue, editor) => {
+                              setEditorValue(newValue);
+                              setContentData(editor.getContent());
+                            }}
+                            apiKey={import.meta.env.VITE_API_KEY_TINYMCE}
+                            init={{
+                              plugins: [
+                                'advlist',
+                                'autolink',
+                                'lists',
+                                'link',
+                                'image',
+                                'charmap',
+                                'preview',
+                                'anchor',
+                                'searchreplace',
+                                'visualblocks',
+                                'code',
+                                'fullscreen',
+                                'insertdatetime',
+                                'media',
+                                'table',
+                                'help',
+                                'wordcount',
+                              ],
+                              toolbar:
+                                'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                              tinycomments_mode: 'embedded',
+                            }}
+                          />
+                        </div>
+                      )}
+                      ;
                     </div>
                     <div className="flex justify-end mt-4">
                       <button
@@ -768,8 +847,6 @@ const fetchMenuContent = async (searchParams = { lang: '', menuid: '' }) => {
                 </div>
               </div>
             )}
-
-
 
             {/* {showModal && (
               <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

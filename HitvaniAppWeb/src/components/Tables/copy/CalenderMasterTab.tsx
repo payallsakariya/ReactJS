@@ -5,53 +5,14 @@ import DataTable from 'react-data-table-component';
 const CalenderMasterTab = () => {
   // State to control modal visibility
   const [showModal, setShowModal] = useState(false);
-  const [apiMessage, setApiMessage] = useState(''); // State for API messages
-  const [showMessage, setShowMessage] = useState(false); // Control visibility for fade-out
-  const [displayDiv, setDisplayDiv] = useState(false);
-
-  // Display and fade out message
-  const displayMessage = (message) => {
-    setApiMessage(message);
-    setShowMessage(true);
-    setDisplayDiv(true);
-
-    // Hide message text after 5 seconds
-    setTimeout(() => setShowMessage(false), 35000);
-
-    // Completely remove div after fade-out completes
-    setTimeout(() => setDisplayDiv(false), 4000);
-  };
+  const [selectedLanguage, setSelectedLanguage] = useState('');
 
   // Day Options Based on Language Code
-  const dayOptions = {
-    H: [
-      'सोमवार',
-      'मंगलवार',
-      'बुधवार',
-      'गुरुवार',
-      'शुक्रवार',
-      'शनिवार',
-      'रविवार',
-    ],
-    G: [
-      'સોમવાર',
-      'મંગળવાર',
-      'બુધવાર',
-      'ગુરુવાર',
-      'શુક્રવાર',
-      'શનિવાર',
-      'રવિવાર',
-    ],
-    E: [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ],
-  };
+const dayOptions = {
+  H: ['सोमवार', 'मंगलवार', 'बुधवार', 'गुरुवार', 'शुक्रवार', 'शनिवार', 'रविवार'],
+  G: ['સોમવાર', 'મંગળવાર', 'બુધવાર', 'ગુરુવાર', 'શુક્રવાર', 'શનિવાર', 'રવિવાર'],
+  E: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+};
 
   // Function to handle language and reset day options if needed
   const handleLanguageChange = (langCode) => {
@@ -77,18 +38,6 @@ const CalenderMasterTab = () => {
 
   const [loading, setLoading] = useState(true);
   const [calenderContentData, setCalenderContentData] = useState([]);
-  const [searchText, setSearchText] = useState('');
-  const filteredData = calenderContentData.filter((item) => {
-    return (
-      (item.lang?.toLowerCase() || '').includes(searchText.toLowerCase()) ||
-      (item.month?.toLowerCase() || '').includes(searchText.toLowerCase()) ||
-      (item.tithi?.toLowerCase() || '').includes(searchText.toLowerCase()) ||
-      (item.flag?.toLowerCase() || '').includes(searchText.toLowerCase()) ||
-      (item.ndate?.toLowerCase() || '').includes(searchText.toLowerCase()) ||
-      (item.day?.toLowerCase() || '').includes(searchText.toLowerCase()) ||
-      (item.desc?.toLowerCase() || '').includes(searchText.toLowerCase())
-    );
-  });
 
   // Base URL from .env file
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -120,10 +69,8 @@ const CalenderMasterTab = () => {
         );
 
         if (response.ok) {
-          displayMessage('Record updated successfully.');
           fetchCalenderContent();
         } else {
-          displayMessage('Failed to update the calendar content.');
           console.error('Failed to update the calendar content.');
         }
       } else {
@@ -135,15 +82,12 @@ const CalenderMasterTab = () => {
         });
 
         if (response.ok) {
-          displayMessage('New record added successfully.');
           fetchCalenderContent();
         } else {
-          displayMessage('Failed to add new calendar content.');
           console.error('Failed to add new calendar content.');
         }
       }
     } catch (error) {
-      displayMessage('Error in calendar content operation.');
       console.error('Error in calendar content operation:', error);
     }
 
@@ -182,7 +126,6 @@ const CalenderMasterTab = () => {
 
       setShowModal(true);
     } else {
-      displayMessage('Record to edit not found.');
       console.warn('menuToEdit not found for id:', id);
     }
   };
@@ -196,14 +139,11 @@ const CalenderMasterTab = () => {
         });
 
         if (response.ok) {
-          displayMessage('Record deleted successfully.');
           fetchCalenderContent();
         } else {
-          displayMessage('Failed to delete the calendar content.');
           console.error('Failed to delete the Calender content.');
         }
       } catch (error) {
-        displayMessage('Error deleting calendar content.');
         console.error('Error deleting Calender content:', error);
       }
     }
@@ -346,14 +286,6 @@ const CalenderMasterTab = () => {
         <h4 className="text-xl font-semibold text-black dark:text-white">
           Calendar Master
         </h4>
-        <input
-          type="text"
-          size={30}
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          placeholder="Search..."
-          className="px-4 py-2 mr-10 border rounded-md ml-auto block"
-        />
         <button
           className="bg-primary text-white px-4 py-2 rounded-md"
           onClick={() => {
@@ -374,39 +306,19 @@ const CalenderMasterTab = () => {
           Add New Record
         </button>
       </div>
-      {/* API Message */}
-      {displayDiv && (
-        <div>
-            {apiMessage && (
-                    <div
-                      className={`mb-4 p-4 text-center text-white bg-green-500 rounded-md transition-opacity duration-1000 ${
-                        showMessage ? 'opacity-100' : 'opacity-0'
-                      }`}
-                      style={{
-                        transition: 'opacity 1s ease-out',
-                        zIndex: 1000,
-                      }}
-                    >
-                      {apiMessage}
-                    </div>
-                  )}
-        </div>
-      )}
-     
+
       {loading ? (
         <Loader /> // Your defined loader component
       ) : (
         <div className="flex flex-col overflow-x-auto">
-          {/* Search input */}
-
           {/* Data Table */}
           <div className="mt-4">
             <DataTable
               style={{ width: '100%', fontSize: '20px' }}
               columns={columns}
-              data={filteredData}
+              data={calenderContentData}
               customStyles={customStyles}
-              // pagination
+              pagination
               highlightOnHover
             />
           </div>
@@ -477,11 +389,7 @@ const CalenderMasterTab = () => {
                       <input
                         type="date"
                         className="w-full border px-3 py-2 rounded-md"
-                        value={
-                          formData.ndate && formData.ndate !== '0000-00-00'
-                            ? formData.ndate
-                            : ''
-                        }
+                        value={formData.ndate}
                         onChange={(e) =>
                           setFormData({ ...formData, ndate: e.target.value })
                         }
