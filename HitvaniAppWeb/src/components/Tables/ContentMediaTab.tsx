@@ -503,9 +503,11 @@ const ContentMediaTab = () => {
     },
     headCells: {
       style: {
-        color: '#4a4a4a',
+        color: '#64748B',
         fontSize: '15px',
         fontWeight: 'bold',
+        textTransform: 'uppercase', // Make the headings uppercase
+        backgroundColor: '#f0f4f6', // Set header background color
         justifyContent: 'center', // Center-align table headers
         textAlign: 'center',
       },

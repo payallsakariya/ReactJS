@@ -254,9 +254,11 @@ const CalenderMasterTab = () => {
     },
     headCells: {
       style: {
-        color: '#4a4a4a',
+        color: '#64748B',
         fontSize: '15px',
         fontWeight: 'bold',
+        textTransform: 'uppercase', // Make the headings uppercase
+        backgroundColor: '#f0f4f6', // Set header background color
         justifyContent: 'center', // Center-align table headers
         textAlign: 'center',
       },
@@ -300,7 +302,7 @@ const CalenderMasterTab = () => {
       name: 'Language',
       selector: (row: any) => row.lang,
       sortable: true,
-      width: '130px',
+      width: '150px',
       textAlign: 'center',
     },
     {
@@ -313,25 +315,25 @@ const CalenderMasterTab = () => {
       name: 'Tithi',
       selector: (row: any) => row.tithi,
       sortable: true,
-      width: '100px',
+      width: '130px',
     },
     {
       name: 'Flag',
       selector: (row: any) => row.flag,
       sortable: true,
-      width: '100px',
+      width: '130px',
     },
     {
       name: 'Date',
       selector: (row: any) => row.ndate,
       // selector: (row: any) => (row.status == 1 ? 'A' : 'UA'),
       sortable: true,
-      width: '100px',
+      width: '170px',
     },
     {
       name: 'Day',
       selector: (row: any) => row.day,
-      width: '90px',
+      width: '100px',
     },
     {
       name: 'Description',
@@ -377,22 +379,22 @@ const CalenderMasterTab = () => {
       {/* API Message */}
       {displayDiv && (
         <div>
-            {apiMessage && (
-                    <div
-                      className={`mb-4 p-4 text-center text-white bg-green-500 rounded-md transition-opacity duration-1000 ${
-                        showMessage ? 'opacity-100' : 'opacity-0'
-                      }`}
-                      style={{
-                        transition: 'opacity 1s ease-out',
-                        zIndex: 1000,
-                      }}
-                    >
-                      {apiMessage}
-                    </div>
-                  )}
+          {apiMessage && (
+            <div
+              className={`mb-4 p-4 text-center text-white bg-green-500 rounded-md transition-opacity duration-1000 ${
+                showMessage ? 'opacity-100' : 'opacity-0'
+              }`}
+              style={{
+                transition: 'opacity 1s ease-out',
+                zIndex: 1000,
+              }}
+            >
+              {apiMessage}
+            </div>
+          )}
         </div>
       )}
-     
+
       {loading ? (
         <Loader /> // Your defined loader component
       ) : (

@@ -94,7 +94,7 @@ const MenuContentManager = () => {
     if (selectedOption) {
       setIsL1Disabled(false); // Enable L1 dropdown when a language is selected
       fetchL1Options(selectedOption.value); // Fetch L1 options from API
-      console.log(selectedOption.value);
+      // console.log(selectedOption.value);
     } else {
       setshowAdd(false);
       setIsL1Disabled(true); // Disable L1 dropdown if no language is selected
@@ -216,7 +216,7 @@ const MenuContentManager = () => {
       setIsL4Disabled(false); // Enable L4 dropdown when L3 is selected
       // setSearchID(selectedOption); // Set the search value
       // setrememberID(selectedOption.value); // This will take effect after the render cycle
-      console.log('Using selectedOption directly:', selectedOption.value); // Use selectedOption.value directly
+      // console.log('Using selectedOption directly:', selectedOption.value); // Use selectedOption.value directly
       fetchL4Options(selectedOption.value); // Fetch L4 options using selectedOption.value
     } else {
       setIsL4Disabled(true); // Disable L4 dropdown if no L3 is selected
@@ -295,7 +295,7 @@ const MenuContentManager = () => {
     // Set the search ID based on the priority of selections
     if (searchIdValue) {
       setSearchID(searchIdValue);
-      console.log(searchIdVal);
+      // console.log(searchIdVal);
     }
     setshowAdd(true);
     setisSearchMode(false);
@@ -353,7 +353,6 @@ const MenuContentManager = () => {
 
   // Handle edit operation
   const handleEdit = (child_id) => {
-    console.log('handl');
     const menuToEdit = menuContentData.find(
       (item) => item.child_id === child_id,
     );
@@ -491,9 +490,11 @@ const MenuContentManager = () => {
     },
     headCells: {
       style: {
-        color: '#4a4a4a',
+        color: '#64748B',
         fontSize: '15px',
         fontWeight: 'bold',
+        textTransform: 'uppercase', // Make the headings uppercase
+        backgroundColor: '#f0f4f6', // Set header background color
         justifyContent: 'center', // Center-align table headers
         textAlign: 'center',
       },
