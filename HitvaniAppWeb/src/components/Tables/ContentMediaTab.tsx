@@ -562,13 +562,13 @@ const ContentMediaTab = () => {
       name: 'Media Desc',
       selector: (row: any) => row.media_desc,
       sortable: true,
-      width: '140px',
+      width: '150px',
     },
     {
       name: 'Media Link',
       selector: (row: any) => row.media_link,
       sortable: true,
-      width: '130px',
+      width: '150px',
     },
     {
       name: 'Type',
@@ -582,22 +582,22 @@ const ContentMediaTab = () => {
       // datatable status 0,1 view A ,UA
       selector: (row: any) => (row.status == 1 ? 'A' : 'UA'),
       sortable: true,
-      width: '100px',
+      width: '130px',
     },
     {
       name: 'Detail',
       selector: (row: any) => row.detail,
-      width: '90px',
+      width: '200px',
     },
     {
       name: 'Album',
       selector: (row: any) => row.album,
-      width: '90px',
+      width: '160px',
     },
     {
       name: 'Photo Link',
       selector: (row: any) => row.photo_link,
-      width: '130px',
+      width: '150px',
     },
   ];
 

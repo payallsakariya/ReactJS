@@ -553,13 +553,13 @@ const MenuContentManager = () => {
       name: 'P ID',
       selector: (row) => row.parentid,
       sortable: true,
-      width: '90px',
+      width: '85px',
     },
     {
       name: 'C ID',
       selector: (row) => row.child_id,
       sortable: true,
-      width: '90px',
+      width: '85px',
     },
     {
       name: 'P Name',
@@ -577,7 +577,7 @@ const MenuContentManager = () => {
       name: 'Status',
       selector: (row) => row.stauts,
       sortable: true,
-      width: '100px',
+      width: '130px',
     },
     {
       name: 'Last M_Time',
@@ -589,13 +589,13 @@ const MenuContentManager = () => {
       name: 'C Creater',
       selector: (row) => row.content_creator,
       sortable: true,
-      width: '120px',
+      width: '135px',
     },
     {
       name: 'C Description',
       selector: (row) => row.content_description,
       sortable: true,
-      width: '150px',
+      width: '170px',
     },
   ];
 
