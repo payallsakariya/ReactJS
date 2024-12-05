@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import {
   Blogs,
   CalenderMaster,
@@ -9,17 +9,34 @@ import {
 } from "./pages";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+function delayForDemo(promise) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(promise), 500);
+  });
+}
+
+const Products = lazy(() => delayForDemo(import('./pages/Products')));
+
 function App() {
   return (
     <div>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Dashboard />}></Route>
-            <Route path="datacontent" element={<DataContent />}></Route>
-            <Route path="blags" element={<Blogs />}></Route>
-            <Route path="calendermaster" element={<CalenderMaster />}></Route>
-            <Route path="*" element={<Error />}></Route>
+            <Route index element={<Dashboard />} />
+            <Route path="datacontent" element={<DataContent />} />
+            <Route path="blogs" element={<Blogs />} />
+            <Route path="calendermaster" element={<CalenderMaster />} />
+            <Route
+              path="products"
+              element={
+                <Suspense fallback={<div className="loader">Loading...</div>}>
+                  <Products />
+                </Suspense>
+              }
+            />
+            <Route path="*" element={<Error />} />
           </Route>
         </Routes>
       </BrowserRouter>

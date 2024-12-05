@@ -5,8 +5,9 @@ import CalenderMaster from "./CalenderMaster";
 import AppVersion from "./AppVersion";
 import DataContent from "./DataContent";
 import MediaContent from "./MediaContent";
+import Products from "./Products";
 
 
 import Error from "./Error";
 
-export {Layout,Dashboard,Blogs,CalenderMaster,Error,AppVersion,DataContent,MediaContent};
+export {Layout,Dashboard,Blogs,CalenderMaster,Error,AppVersion,DataContent,MediaContent,Products};

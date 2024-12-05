@@ -62,6 +62,11 @@ const Sidebar = () => {
             Demo
           </Link>
         </li>
+        <li>
+          <Link to="/products" className="text-blue-600 hover:text-blue-800">
+          Products
+          </Link>
+        </li>
       </ul>
     </nav>
   );
