@@ -6,6 +6,7 @@ import UseEffectHook from "./UseEffectHook";
 import UseReducerEx from "./UseReducerEx";
 import UseRefExample from "./UseRefExample";
 import CustomHook from "./Components/CustomHook";
+import UseLayoutEffectExamples from "./UseLayoutEffectExamples";
 
 
 const App = () => {
@@ -15,9 +16,10 @@ const App = () => {
        {/* <ChangeColor />
        <NewApp />
        <UseEffectHook /> */}
-       {/* <UseReducerEx />
-       <UseRefExample /> */}
-       <CustomHook />
+       <UseReducerEx />
+       {/* <UseRefExample /> */}
+       {/* <CustomHook /> */}
+       {/* <UseLayoutEffectExamples /> */}
        </>
        
     );

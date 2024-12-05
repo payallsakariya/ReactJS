@@ -11,7 +11,8 @@ const CustomHook = () => {
         <>
             <button
                 onClick={() =>
-                    setUrl("https://hitvaniapp.excellcons.com/datalist")
+                    setUrl('https://www.google.co.in/')
+                    // https://hitvaniapp.excellcons.com/datalist
                 }
             >
                 Data1
